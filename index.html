@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editor de Texto Avançado</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app">
+    <header class="app__header">
+      <h1>Editor de Texto Avançado</h1>
+      <div class="app__status status" id="statusIndicator" aria-live="polite"></div>
+    </header>
+
+    <main class="app__main">
+      <section class="editor-card" aria-label="Editor de texto rich text">
+        <div class="toolbar" role="toolbar" aria-label="Ferramentas de formatação">
+          <div class="toolbar__group">
+            <button type="button" class="toolbar__button" data-command="bold" title="Negrito (Ctrl+B)">
+              <span class="toolbar__icon">B</span>
+            </button>
+            <button type="button" class="toolbar__button" data-command="italic" title="Itálico (Ctrl+I)">
+              <span class="toolbar__icon">I</span>
+            </button>
+            <button type="button" class="toolbar__button" data-command="underline" title="Sublinhado (Ctrl+U)">
+              <span class="toolbar__icon">U</span>
+            </button>
+            <button type="button" class="toolbar__button" data-command="strikeThrough" title="Tachado">
+              <span class="toolbar__icon">S</span>
+            </button>
+          </div>
+
+          <div class="toolbar__group">
+            <button type="button" class="toolbar__button" data-command="formatBlock" data-value="H1" title="Título 1">
+              H1
+            </button>
+            <button type="button" class="toolbar__button" data-command="formatBlock" data-value="H2" title="Título 2">
+              H2
+            </button>
+            <button type="button" class="toolbar__button" data-command="formatBlock" data-value="H3" title="Título 3">
+              H3
+            </button>
+            <button type="button" class="toolbar__button" data-command="formatBlock" data-value="P" title="Parágrafo">
+              P
+            </button>
+          </div>
+
+          <div class="toolbar__group">
+            <button type="button" class="toolbar__button" data-command="insertUnorderedList" title="Lista não ordenada">
+              • Lista
+            </button>
+            <button type="button" class="toolbar__button" data-command="insertOrderedList" title="Lista ordenada">
+              1. Lista
+            </button>
+            <button type="button" class="toolbar__button" data-command="formatBlock" data-value="BLOCKQUOTE" title="Citação">
+              ❝ Citação
+            </button>
+          </div>
+
+          <div class="toolbar__group">
+            <button type="button" class="toolbar__button" data-command="justifyLeft" title="Alinhar à esquerda">
+              ⬅
+            </button>
+            <button type="button" class="toolbar__button" data-command="justifyCenter" title="Centralizar texto">
+              ⇔
+            </button>
+            <button type="button" class="toolbar__button" data-command="justifyRight" title="Alinhar à direita">
+              ➡
+            </button>
+            <button type="button" class="toolbar__button" data-command="justifyFull" title="Justificar">
+              ☰
+            </button>
+          </div>
+
+          <div class="toolbar__group toolbar__group--color">
+            <label class="toolbar__label" for="textColor">Cor</label>
+            <input type="color" id="textColor" class="toolbar__color" title="Cor do texto">
+            <label class="toolbar__label" for="highlightColor">Destaque</label>
+            <input type="color" id="highlightColor" class="toolbar__color" title="Cor de fundo">
+          </div>
+
+          <div class="toolbar__group">
+            <button type="button" class="toolbar__button" id="addLinkButton" title="Inserir link">
+              🔗 Link
+            </button>
+            <button type="button" class="toolbar__button" id="addTooltipButton" title="Adicionar tooltip">
+              💬 Tooltip
+            </button>
+            <button type="button" class="toolbar__button" id="clearFormattingButton" title="Limpar formatação">
+              🧹 Limpar
+            </button>
+          </div>
+
+          <div class="toolbar__group">
+            <button type="button" class="toolbar__button" data-command="undo" title="Desfazer (Ctrl+Z)">
+              ↶
+            </button>
+            <button type="button" class="toolbar__button" data-command="redo" title="Refazer (Ctrl+Shift+Z)">
+              ↷
+            </button>
+            <button type="button" class="toolbar__button" id="exportHtmlButton" title="Exportar HTML">
+              ⬇ HTML
+            </button>
+            <button type="button" class="toolbar__button" id="exportMarkdownButton" title="Exportar Markdown">
+              ⬇ MD
+            </button>
+          </div>
+        </div>
+
+        <div class="editor" id="editor" contenteditable="true" spellcheck="true" aria-multiline="true">
+          <h2>Comece escrevendo aqui...</h2>
+          <p class="placeholder">
+            Digite seu texto, selecione trechos para aplicar formatação avançada ou adicione tooltips para fornecer informações contextuais.
+          </p>
+        </div>
+      </section>
+
+      <aside class="sidebar" aria-label="Painel de tooltips e histórico">
+        <section class="sidebar__section">
+          <h2>Tooltips</h2>
+          <div id="tooltipList" class="tooltip-list" aria-live="polite"></div>
+        </section>
+        <section class="sidebar__section">
+          <h2>Histórico do Documento</h2>
+          <div class="history" id="historyLog" aria-live="polite">
+            <p>Nenhuma alteração registrada ainda.</p>
+          </div>
+        </section>
+        <section class="sidebar__section">
+          <h2>Preferências</h2>
+          <label class="toggle">
+            <input type="checkbox" id="autoSaveToggle" checked>
+            <span>Salvar automaticamente no navegador</span>
+          </label>
+          <button type="button" class="sidebar__button" id="clearDocumentButton">Limpar documento</button>
+          <button type="button" class="sidebar__button" id="copyHtmlButton">Copiar HTML para área de transferência</button>
+        </section>
+      </aside>
+    </main>
+  </div>
+
+  <dialog id="tooltipDialog" class="dialog" aria-labelledby="tooltipDialogTitle">
+    <form method="dialog" class="dialog__content" id="tooltipForm">
+      <h2 id="tooltipDialogTitle">Adicionar tooltip</h2>
+      <label class="dialog__field">
+        <span>Texto da tooltip</span>
+        <textarea id="tooltipText" rows="3" required placeholder="Digite a mensagem que aparecerá ao passar o mouse"></textarea>
+      </label>
+      <label class="dialog__field">
+        <span>Ícone (opcional)</span>
+        <input type="text" id="tooltipIcon" placeholder="Exemplo: ℹ️ ou ?">
+      </label>
+      <menu class="dialog__actions">
+        <button value="cancel">Cancelar</button>
+        <button value="confirm" class="dialog__primary">Aplicar</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog id="linkDialog" class="dialog" aria-labelledby="linkDialogTitle">
+    <form method="dialog" class="dialog__content" id="linkForm">
+      <h2 id="linkDialogTitle">Inserir link</h2>
+      <label class="dialog__field">
+        <span>URL</span>
+        <input type="url" id="linkUrl" required placeholder="https://exemplo.com">
+      </label>
+      <label class="dialog__field dialog__field--inline">
+        <input type="checkbox" id="linkNewTab" checked>
+        <span>Abrir em nova aba</span>
+      </label>
+      <menu class="dialog__actions">
+        <button value="cancel">Cancelar</button>
+        <button value="confirm" class="dialog__primary">Inserir</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <template id="tooltipListItemTemplate">
+    <article class="tooltip-card">
+      <header>
+        <div class="tooltip-card__badge"></div>
+        <button type="button" class="tooltip-card__remove" title="Remover tooltip">×</button>
+      </header>
+      <p class="tooltip-card__preview"></p>
+      <footer>
+        <button type="button" class="tooltip-card__scroll">Ver no texto</button>
+        <button type="button" class="tooltip-card__edit">Editar tooltip</button>
+      </footer>
+    </article>
+  </template>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>
